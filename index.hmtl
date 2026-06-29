@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WELCHEPELIS PLUS</title>
+
+<style>
+/* Forzamos a que el diseño ocupe todo el espacio de Blogger */
+body {
+  margin:0 !important;
+  padding:0 !important;
+  background: radial-gradient(circle,#0f172a,#020617) !important;
+  font-family:Arial, sans-serif;
+  color:white;
+  text-align:center;
+  overflow-x: hidden; 
+}
+
+h1{
+  font-size:50px;
+  margin:20px;
+  color:#f43f5e;
+  letter-spacing:4px;
+}
+
+/* 🎬 CUADRÍCULA DE COLUMNAS */
+.galeria{
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:15px;
+  padding:20px;
+  width:90%;
+  margin:auto;
+  min-height: 80vh;
+}
+
+.card{
+  transition:0.3s;
+}
+
+.card img{
+  width:100%;
+  height: 350px; 
+  object-fit: cover; 
+  border-radius:12px;
+  cursor:pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  user-select: none; 
+}
+
+.card:hover{
+  transform:scale(1.08);
+}
+
+/* 🎬 REPRODUCTOR MODAL (PANTALLA COMPLETA TOTAL) */
+.modal {
+  display: none; 
+  position: fixed;
+  z-index: 999999; 
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000; 
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; 
+}
+
+.modal-contenido {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+.modal-contenido iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* ❌ BOTÓN PARA CERRAR EL VIDEO */
+.btn-cerrar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(244, 63, 94, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 101000;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-cerrar:hover {
+  background: #f43f5e;
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media(max-width:1200px){
+  .galeria{ grid-template-columns: repeat(4,1fr); }
+  .card img { height: 300px; }
+}
+
+@media(max-width:900px){
+  .galeria{ grid-template-columns: repeat(3,1fr); }
+  .card img { height: 250px; }
+}
+
+@media(max-width:500px){
+  .galeria{ grid-template-columns: repeat(2,1fr); }
+  h1 { font-size: 35px; }
+  .card img { height: 200px; }
+}
+
+/* 🚫 PARCHE ANTI-PLANTILLAS BLOGGER */
+.post-title, .post-header, .post-footer, .comments, #header, #footer, .sidebar, .comments-block {
+  display: none !important;
+}
+</style>
+</head>
+
+<body>
+
+<h1>WELCHEPELIS PLUS</h1>
+
+<div class="galeria" id="galeria"></div>
+
+<div id="reproductorModal" class="modal">
+  <button class="btn-cerrar" onclick="resetearModal()">✕</button>
+  <div class="modal-contenido" onclick="event.stopPropagation()">
+    <iframe id="videoPlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+</div>
+
+<script>
+const peliculas = [
+  {
+    img:"https://i.postimg.cc/3x6z8mxp/holooo.jpg",
+    link:"https://drive.google.com/file/d/1u0UXOID6Mu_CD-SE_pzHIrSFy8g7utQL/view?usp=sharing" 
+  },
+  {
+    img:"https://i.postimg.cc/PxJmdDKR/lineup-woodstock-99.jpg",
+    link:"https://drive.google.com/file/d/1uyVjF9VGaB3HZz1UZ4gco0m1rG3-rg18/view?usp=sharing"
+  },
+  {
+    img:"https://i.postimg.cc/Y91xVYzJ/mashd.jpg",
+    link:"https://drive.google.com/file/d/1xpTLDF41SdFSng3B5e8EevvqOEz0HQxB/view?usp=sharing"
+  },
+  {
+    img:"https://i.postimg.cc/3R5L9mmW/71t1mmo0b-VL-AC-SY445.jpg",
+    link:"https://drive.google.com/file/d/1vKeRRVi5KDjm5tjP8uLJz9teqNdu8-XI/view?usp=sharing"
+  },
+  {
+    img:"https://i.postimg.cc/02Yc2bT3/20076145.jpg",
+    link:"https://drive.google.com/file/d/1NppnCiBn8UWlsspTBkroYHfMF8CVdrgc/view?usp=sharing"
+  },
+  {
+    img:"https://i.postimg.cc/PxNddGPj/serial-experiments-lain-335197557-mmed.jpg",
+    link:"https://drive.google.com/drive/folders/1G8vlHfg2zc-doIlyi6Qi3FJEy-Smvp8Q?usp=sharing"
+  },
+  {
+    img:"https://i.postimg.cc/5NcH7yPD/Gnixoiia-MAYLYg.jpg",
+    link:"https://drive.google.com/file/d/1Z9XyNS2vR-ytagB-VH-t93muAT7SA3Rc/view?usp=sharing"
+  },
+  {
+    img:"https://i.postimg.cc/L5z3y8j2/5648054.jpg",
+    link:"https://drive.google.com/file/d/1FS1Q9yrD3vrI6Ng0az9y5Iv_dGMbQNdn/view?usp=sharing"
+  },
+  {
+    img:"https://i.postimg.cc/vBTvGJDX/Bob-Esponja-La-Pelicula.jpg",
+    link:"https://drive.google.com/file/d/1BY7GeG4IIMuKjn456eZfbUX4FAiua7JL/view?usp=sharing"
+  },
+  { 
+    img:"https://i.postimg.cc/8cyg84fp/71e-Ri7DCw4L-AC-UF894-1000-QL80.jpg",
+    link:"https://drive.google.com/file/d/1xy0tNncCE_9aLvJ_Jhi4fJGo825utr1A/view?usp=sharing"
+  },
+  {
+    img:"https://i.postimg.cc/y8ZkjYG9/images-(2).jpg",
+    link:"https://drive.google.com/file/d/1aCpTeT-WVmeTZYBp8sY5i9rGY3vJ4vEM/view?usp=sharing"
+  },
+  {
+    img:"https://i.postimg.cc/L5cLLc6d/71l-W7QNK0IL-RI-768x1024.jpg",
+    link:"https://drive.google.com/file/d/1FMb1o2GM3cHM5sa9H4K5nZAJJoGSLJX_/view?usp=sharing"
+  }
+];
+
+const galeria = document.getElementById("galeria");
+const modal = document.getElementById("reproductorModal");
+const videoPlayer = document.getElementById("videoPlayer");
+
+// Generar las portadas dinámicamente
+peliculas.forEach(p => {
+  const div = document.createElement("div");
+  div.className = "card";
+  div.innerHTML = `<img src="${p.img}" ondblclick="abrirReproductor('${p.link}')" alt="Portada" loading="lazy">`;
+  galeria.appendChild(div);
+});
+
+// Lógica de apertura con soporte OK.ru y Drive
+function abrirReproductor(link){
+  let embedLink = link;
+
+  if (link.includes("ok.ru")) {
+    if (link.includes("/video/")) {
+      const videoId = link.split("/video/")[1].split("?")[0];
+      embedLink = `https://ok.ru/videoembed/${videoId}`;
+    }
+  } 
+  else if (link.includes("drive.google.com") && link.includes("/view")) {
+    embedLink = link.replace("/view", "/preview");
+  } 
+  else if (link.includes("drive.google.com") && link.includes("/folders/")) {
+    const folderId = link.split("/folders/")[1].split("?")[0];
+    embedLink = `https://drive.google.com/embeddedfolderview?id=${folderId}#grid`;
+  }
+
+  videoPlayer.src = embedLink;
+  modal.style.display = "flex";
+}
+
+function resetearModal() {
+  modal.style.display = "none";
+  videoPlayer.src = "";
+}
+
+// Cerrar con tecla Escape
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") resetearModal();
+});
+</script>
+
+</body>
+</html>
